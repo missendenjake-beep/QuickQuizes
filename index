@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#f6f7f4">
+	<title>Quizletto — Find your next little obsession</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			color-scheme: light;
+			--ink: #172019;
+			--muted: #748078;
+			--paper: #f6f7f4;
+			--white: #fff;
+			--line: #e6e9e3;
+			--green: #245c43;
+			--lime: #d7ed71;
+			--orange: #f18b59;
+			--shadow: 0 16px 38px rgba(27, 44, 32, .09);
+			font-family: "DM Sans", sans-serif;
+			font-synthesis: none;
+			text-rendering: optimizeLegibility;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		* { box-sizing: border-box; }
+		body { margin: 0; min-width: 320px; background: var(--paper); color: var(--ink); }
+		button, input { font: inherit; }
+		button { color: inherit; }
+		button:focus-visible, input:focus-visible { outline: 3px solid #9bbd48; outline-offset: 3px; }
+		.shell { max-width: 1440px; min-height: 100vh; margin: auto; padding: 0 54px 60px; }
+		.topbar { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+		.brand { display: inline-flex; gap: 10px; align-items: center; color: var(--ink); text-decoration: none; font: 700 22px "Space Grotesk", sans-serif; letter-spacing: -.8px; }
+		.brand-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; background: var(--green); color: var(--lime); font-size: 19px; }
+		.nav { display: flex; align-items: center; gap: 30px; color: #647068; font-size: 13px; }
+		.nav a { color: inherit; text-decoration: none; }
+		.nav a:hover { color: var(--green); }
+		.nav .nav-active { color: var(--ink); font-weight: 700; }
+		.profile { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 600; }
+		.avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e5dfc8; font-size: 17px; }
+		.intro { padding: 46px 0 28px; display: flex; justify-content: space-between; align-items: end; gap: 20px; }
+		.eyebrow { margin: 0 0 10px; color: var(--green); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.7px; }
+		h1, h2, h3, p { margin-top: 0; }
+		h1 { margin-bottom: 8px; font: 600 clamp(30px, 4vw, 42px)/1.1 "Space Grotesk", sans-serif; letter-spacing: -1.7px; }
+		.intro-copy { margin-bottom: 0; color: var(--muted); font-size: 14px; }
+		.streak { display: flex; align-items: center; gap: 10px; padding: 12px 15px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); font-size: 12px; }
+		.streak-icon { font-size: 20px; }
+		.streak strong { display: block; font-size: 13px; }
+		.streak span:last-child { color: var(--muted); }
+		.feature { position: relative; display: grid; grid-template-columns: 1fr 42%; min-height: 236px; overflow: hidden; border-radius: 9px; background: #d9e8d4; }
+		.feature-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: 32px 38px; }
+		.feature-label { margin-bottom: 12px; color: #315a3e; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; }
+		.feature h2 { max-width: 460px; margin-bottom: 9px; font: 600 27px/1.14 "Space Grotesk", sans-serif; letter-spacing: -.8px; }
+		.feature p { margin-bottom: 17px; color: #536658; font-size: 13px; }
+		.feature-photo { min-height: 236px; background: linear-gradient(90deg, #d9e8d4 0%, transparent 30%), url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1100&q=85") center 48% / cover; }
+		.button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 0; border-radius: 6px; background: var(--green); color: #fff; cursor: pointer; font-size: 12px; font-weight: 700; transition: background .16s, transform .16s; }
+		.button:hover { background: #194833; transform: translateY(-1px); }
+		.button.secondary { border: 1px solid var(--line); background: white; color: var(--ink); }
+		.button.secondary:hover { background: #f1f5ee; }
+		.catalog { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 36px; margin-top: 37px; }
+		.sidebar { padding-top: 2px; }
+		.side-heading { margin: 0 0 11px; color: #889189; font-size: 10px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; }
+		.category-list { display: grid; gap: 4px; margin-bottom: 28px; }
+		.category-button { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 10px 11px; border: 0; border-radius: 6px; background: transparent; color: #626c64; cursor: pointer; text-align: left; font-size: 12px; }
+		.category-button:hover { background: #ecefe9; }
+		.category-button.active { background: #e5ede3; color: var(--green); font-weight: 700; }
+		.category-count { color: #929b93; font-size: 10px; }
+		.sidebar-note { padding: 16px; border-radius: 7px; background: #f0eadd; }
+		.sidebar-note strong { display: block; margin-bottom: 5px; font: 600 14px "Space Grotesk", sans-serif; }
+		.sidebar-note p { margin-bottom: 12px; color: #746f60; font-size: 11px; line-height: 1.5; }
+		.text-button { padding: 0; border: 0; background: transparent; color: var(--green); cursor: pointer; font-size: 11px; font-weight: 700; }
+		.catalog-main { min-width: 0; }
+		.catalog-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; }
+		.catalog-heading h2 { margin: 0; font: 600 21px "Space Grotesk", sans-serif; letter-spacing: -.5px; }
+		.results-count { margin-left: 7px; color: #8a938c; font: 500 11px "DM Sans", sans-serif; letter-spacing: 0; }
+		.search-wrap { position: relative; width: min(100%, 290px); }
+		.search-wrap svg { position: absolute; top: 50%; left: 12px; width: 16px; height: 16px; transform: translateY(-50%); color: #87918a; pointer-events: none; }
+		.search-input { width: 100%; height: 39px; padding: 0 12px 0 36px; border: 1px solid #e1e5de; border-radius: 6px; background: #fff; color: var(--ink); font-size: 12px; }
+		.search-input::placeholder { color: #9aa29b; }
+		.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+		.chips { display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none; }
+		.chips::-webkit-scrollbar { display: none; }
+		.chip { flex: 0 0 auto; padding: 7px 11px; border: 1px solid #e2e6df; border-radius: 5px; background: transparent; color: #68736a; cursor: pointer; font-size: 10px; }
+		.chip:hover, .chip.active { border-color: var(--green); background: var(--green); color: white; }
+		.sort-select { height: 31px; padding: 0 25px 0 8px; border: 0; background: transparent; color: #727d74; font-size: 11px; cursor: pointer; }
+		.quiz-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; }
+		.load-more-wrap { margin-top: 18px; text-align: center; }
+		.load-more { min-width: 170px; }
+		.quiz-card { min-width: 0; overflow: hidden; border: 1px solid #e7eae4; border-radius: 7px; background: white; transition: transform .18s, box-shadow .18s; }
+		.quiz-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+		.card-image { position: relative; height: 128px; background-color: #e6e9df; background-position: center; background-size: cover; }
+		.card-category { position: absolute; top: 10px; left: 10px; padding: 5px 8px; border-radius: 4px; background: rgba(255,255,255,.92); color: #45554a; font-size: 9px; font-weight: 700; }
+		.bookmark { position: absolute; top: 8px; right: 8px; display: grid; width: 29px; height: 29px; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.94); cursor: pointer; color: #657269; }
+		.bookmark.saved { color: #d46d4a; }
+		.bookmark svg { width: 15px; height: 15px; }
+		.card-body { padding: 13px 13px 12px; }
+		.card-body h3 { margin-bottom: 5px; font: 600 15px/1.25 "Space Grotesk", sans-serif; letter-spacing: -.2px; }
+		.card-description { min-height: 33px; margin-bottom: 11px; color: #828b83; font-size: 10px; line-height: 1.5; }
+		.card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid #eff1ed; color: #7d877f; font-size: 10px; }
+		.card-meta { display: flex; align-items: center; gap: 9px; }
+		.difficulty { color: #4a7455; }
+		.play-link { padding: 4px 0 4px 6px; border: 0; background: none; color: var(--green); cursor: pointer; font-size: 10px; font-weight: 700; }
+		.empty-state { grid-column: 1 / -1; padding: 60px 20px; color: var(--muted); text-align: center; }
+		.empty-state strong { display: block; margin-bottom: 6px; color: var(--ink); font: 600 18px "Space Grotesk", sans-serif; }
+		.history-page { padding: 46px 0 20px; }
+		.history-heading { margin-bottom: 26px; }
+		.history-list { display: grid; gap: 12px; }
+		.history-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 20px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); }
+		.history-info { min-width: 0; }
+		.history-date { display: block; margin-bottom: 6px; color: #89928a; font-size: 10px; }
+		.history-info h2 { margin: 0 0 5px; font: 600 17px "Space Grotesk", sans-serif; }
+		.history-info p { margin: 0; color: var(--muted); font-size: 11px; }
+		.history-result { display: flex; align-items: center; gap: 19px; flex: 0 0 auto; }
+		.history-score { text-align: right; }
+		.history-score strong { display: block; color: var(--green); font: 600 21px "Space Grotesk", sans-serif; }
+		.history-score span { color: var(--muted); font-size: 10px; }
+		.history-notice { margin: 0 0 16px; padding: 12px 14px; border-radius: 6px; background: #fff1ec; color: #984b36; font-size: 12px; }
+		.modal-backdrop { position: fixed; z-index: 5; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(19, 30, 22, .52); backdrop-filter: blur(4px); }
+		.modal { width: min(100%, 540px); max-height: min(720px, 92vh); overflow: auto; padding: 25px; border-radius: 9px; background: var(--white); box-shadow: 0 28px 80px rgba(0, 0, 0, .2); animation: arrive .2s ease-out; }
+		@keyframes arrive { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+		.modal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+		.modal-top h2 { margin: 0 0 5px; font: 600 22px "Space Grotesk", sans-serif; }
+		.modal-top p { margin-bottom: 0; color: var(--muted); font-size: 12px; }
+		.close-button { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border: 0; border-radius: 5px; background: #f1f3ef; cursor: pointer; font-size: 19px; }
+		.progress-row { display: flex; justify-content: space-between; margin: 25px 0 9px; color: #78827a; font-size: 11px; }
+		.progress-track { height: 5px; overflow: hidden; border-radius: 5px; background: #edf0ea; }
+		.progress-fill { height: 100%; border-radius: inherit; background: #6f9c59; transition: width .2s; }
+		.question { margin: 24px 0 16px; font: 600 20px/1.35 "Space Grotesk", sans-serif; }
+		.answers { display: grid; gap: 9px; }
+		.answer { width: 100%; padding: 12px 14px; border: 1px solid #e4e8e1; border-radius: 6px; background: white; cursor: pointer; text-align: left; font-size: 13px; transition: border .14s, background .14s; }
+		.answer:hover:not(:disabled) { border-color: #88a67c; background: #f7faf4; }
+		.answer.correct { border-color: #79a36b; background: #eff7eb; color: #315e36; }
+		.answer.incorrect { border-color: #df8b72; background: #fff1ec; color: #984b36; }
+		.answer:disabled { cursor: default; }
+		.feedback { min-height: 20px; margin: 13px 0 3px; color: #64736a; font-size: 12px; }
+		.modal-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; }
+		.score-panel { padding: 28px 10px 14px; text-align: center; }
+		.score-number { display: block; margin-bottom: 4px; color: var(--green); font: 600 48px "Space Grotesk", sans-serif; }
+		.score-panel h3 { margin-bottom: 6px; font: 600 21px "Space Grotesk", sans-serif; }
+		.score-panel p { margin-bottom: 22px; color: var(--muted); font-size: 13px; }
+		[hidden] { display: none !important; }
+		@media (max-width: 1000px) {
+			.shell { padding-right: 32px; padding-left: 32px; }
+			.quiz-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+			.catalog { grid-template-columns: 180px minmax(0, 1fr); gap: 24px; }
+			.card-image { height: 145px; }
+		}
+		@media (max-width: 680px) {
+			.shell { padding: 0 19px 36px; }
+			.topbar { height: 66px; }
+			.nav { gap: 10px; font-size: 11px; }
+			.profile > span:last-child { display: none; }
+			.intro { padding: 32px 0 21px; }
+			.intro-copy { max-width: 270px; line-height: 1.5; }
+			.streak { padding: 9px; }
+			.streak span:last-child { display: none; }
+			.feature { grid-template-columns: 1fr; }
+			.feature-copy { padding: 27px 23px; }
+			.feature-photo { position: absolute; inset: 0 0 0 48%; min-height: 100%; opacity: .35; }
+			.feature-copy { position: relative; z-index: 1; }
+			.feature h2 { max-width: 310px; font-size: 24px; }
+			.catalog { grid-template-columns: 1fr; gap: 16px; margin-top: 27px; }
+			.sidebar { display: contents; }
+			.sidebar > .side-heading, .sidebar-note { display: none; }
+			.category-list { display: flex; gap: 5px; overflow-x: auto; order: 0; margin: 0; scrollbar-width: none; }
+			.category-button { width: auto; flex: 0 0 auto; padding: 8px 10px; border: 1px solid #e2e6df; font-size: 11px; }
+			.category-count { display: none; }
+			.catalog-main { display: contents; }
+			.catalog-heading { grid-column: 1; margin: 2px 0 0; }
+			.toolbar { grid-column: 1; margin-bottom: 0; }
+			.search-wrap { width: 100%; }
+			.chips { max-width: calc(100vw - 120px); }
+			.quiz-grid { grid-column: 1; }
+			.history-page { padding-top: 32px; }
+			.history-card { align-items: flex-start; padding: 15px; }
+			.history-result { gap: 12px; }
+			.history-result .button { min-height: 36px; padding: 0 10px; }
+		}
+		@media (max-width: 430px) {
+			.shell { padding-right: 14px; padding-left: 14px; }
+			.brand { gap: 7px; font-size: 20px; }
+			.nav { gap: 8px; font-size: 10px; }
+			.avatar { width: 30px; height: 30px; }
+			.intro { align-items: flex-start; }
+			.intro-copy { max-width: 230px; font-size: 12px; }
+			.streak { gap: 5px; }
+			.streak strong { font-size: 11px; }
+			.quiz-grid { grid-template-columns: 1fr; gap: 11px; }
+			.quiz-card { display: grid; grid-template-columns: 116px 1fr; min-height: 126px; }
+			.card-image { height: 100%; min-height: 126px; }
+			.card-body { display: flex; flex-direction: column; justify-content: center; padding: 10px; }
+			.card-description { min-height: auto; margin-bottom: 8px; }
+			.card-footer { padding-top: 7px; }
+			.card-meta { gap: 6px; }
+			.feature-copy { padding: 23px 18px; }
+			.history-card { flex-direction: column; gap: 13px; }
+			.history-result { width: 100%; justify-content: space-between; }
+			.history-score { text-align: left; }
+		}
+		@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+	</style>
+</head>
+<body>
+	<div class="shell">
+		<header class="topbar">
+			<a class="brand" href="#" aria-label="Quizletto home"><span class="brand-mark">?</span>quizletto</a>
+			<nav class="nav" aria-label="Main navigation">
+				<a class="nav-active" href="#discover" id="discoverLink" aria-current="page">Discover</a>
+				<a href="#saved" id="savedLink">Saved</a>
+				<a href="#history" id="historyLink">History</a>
+			</nav>
+			<div class="profile"><span class="avatar" aria-hidden="true">🌱</span><span>Curious mind</span></div>
+		</header>
+
+		<main id="discover">
+			<section class="intro" aria-labelledby="pageTitle">
+				<div>
+					<p class="eyebrow">A little curiosity goes a long way</p>
+					<h1 id="pageTitle">Find your next little obsession.</h1>
+					<p class="intro-copy">Pick a quiz, learn a surprising thing, and see what sticks.</p>
+				</div>
+				<div class="streak"><span class="streak-icon" aria-hidden="true">✳</span><div><strong>Good day to learn</strong><span>One quiz is a lovely start</span></div></div>
+			</section>
+
+			<section class="feature" id="feature" aria-label="Featured quiz">
+				<div class="feature-copy">
+					<span class="feature-label">This week's curious pick</span>
+					<h2>Could you find your way around the world?</h2>
+					  <p>Take the scenic route through 3 geography questions.</p>
+					<button class="button" type="button" data-quiz="world-geography">Take the quiz <span aria-hidden="true">→</span></button>
+				</div>
+				<div class="feature-photo" role="img" aria-label="A world map carved into wood"></div>
+			</section>
+
+			<section class="catalog" aria-label="Quiz catalog">
+				<aside class="sidebar" aria-label="Quiz categories">
+					<p class="side-heading">Browse by topic</p>
+					<div class="category-list" id="categoryList"></div>
+					<div class="sidebar-note"><strong>Something on your mind?</strong><p>Search a topic and see where your curiosity takes you.</p><button class="text-button" type="button" id="surpriseButton">Surprise me <span aria-hidden="true">↗</span></button></div>
+				</aside>
+				<div class="catalog-main">
+					<div class="catalog-heading">
+						<h2 id="catalogTitle">Explore quizzes <span class="results-count" id="resultsCount"></span></h2>
+						<label class="search-wrap">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 4.5 4.5"></path></svg>
+							<input class="search-input" id="searchInput" type="search" placeholder="Search topics, quizzes..." autocomplete="off" aria-label="Search quizzes">
+						</label>
+					</div>
+					<div class="toolbar">
+						<div class="chips" id="difficultyChips" aria-label="Filter by difficulty">
+							<button class="chip active" type="button" data-difficulty="All levels">All levels</button>
+							<button class="chip" type="button" data-difficulty="Easy">Easy</button>
+							<button class="chip" type="button" data-difficulty="Medium">Medium</button>
+							<button class="chip" type="button" data-difficulty="Tricky">Tricky</button>
+						</div>
+						<select class="sort-select" id="sortSelect" aria-label="Sort quizzes">
+							<option value="popular">Most popular</option>
+							<option value="az">A to Z</option>
+							<option value="short">Quickest first</option>
+						</select>
+					</div>
+					<div class="quiz-grid" id="quizGrid" aria-live="polite"></div>
+					<div class="load-more-wrap" id="loadMoreWrap" hidden>
+						<button class="button secondary load-more" id="loadMoreButton" type="button">Load more quizzes</button>
+					</div>
+				</div>
+			</section>
+		</main>
+		<section class="history-page" id="historyPage" aria-labelledby="historyTitle" hidden>
+			<div class="history-heading">
+				<p class="eyebrow">Your curious little milestones</p>
+				<h1 id="historyTitle">Quiz history.</h1>
+				<p class="intro-copy">Every quiz you finish, along with the score you earned.</p>
+			</div>
+			<p class="history-notice" id="historyNotice" role="status" hidden></p>
+			<div class="history-list" id="historyList" aria-live="polite"></div>
+		</section>
+	</div>
+
+	<div class="modal-backdrop" id="quizModal" hidden>
+		<section class="modal" role="dialog" aria-modal="true" aria-labelledby="quizTitle">
+			<div class="modal-top"><div><h2 id="quizTitle"></h2><p id="quizSubtitle"></p></div><button class="close-button" id="closeModal" type="button" aria-label="Close quiz">×</button></div>
+			<div id="questionView">
+				<div class="progress-row"><span id="progressText"></span><span id="scoreText">0 correct</span></div>
+				<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+				<h3 class="question" id="questionText"></h3>
+				<div class="answers" id="answerList"></div>
+				<p class="feedback" id="feedback" aria-live="polite"></p>
+				<div class="modal-actions"><span></span><button class="button" id="nextQuestion" type="button" hidden>Next question <span aria-hidden="true">→</span></button></div>
+			</div>
+			<div class="score-panel" id="scoreView" hidden><span class="score-number" id="finalScore"></span><h3 id="scoreHeading"></h3><p id="scoreMessage"></p><button class="button" id="finishQuiz" type="button">Back to exploring</button></div>
+		</section>
+	</div>
+
+	<script>
+		const quizzes = [
+			{ id: "world-geography", title: "Around the world", category: "Geography", difficulty: "Easy", questions: 3, minutes: 2, plays: 942, description: "Test your map sense with island cities, vast deserts, and lake-rich countries.", image: "photo-1526778548025-fa2f459cd5c1", imagePosition: "center 53%", quiz: [
+				{ q: "Which city is famously built across 14 islands?", a: ["Copenhagen", "Stockholm", "Helsinki", "Oslo"], correct: 1 },
+				{ q: "What is the world's largest hot desert?", a: ["The Gobi", "The Sahara", "The Arabian Desert", "The Kalahari"], correct: 1 },
+				{ q: "Which country has the most natural lakes?", a: ["Finland", "Canada", "Brazil", "Russia"], correct: 1 }
+			] },
+			{ id: "deep-sea", title: "Life in the deep sea", category: "Science", difficulty: "Medium", questions: 3, minutes: 2, plays: 721, description: "Explore ocean light, the zones below sunlight, and the deepest places on Earth.", image: "photo-1518837695005-2083093ee35b", imagePosition: "center 52%", quiz: [
+				{ q: "What helps many deep-sea animals make their own light?", a: ["Photosynthesis", "Bioluminescence", "Reflection", "Fermentation"], correct: 1 },
+				{ q: "Which ocean zone receives no sunlight?", a: ["The twilight zone", "The midnight zone", "The sunlit zone", "The reef zone"], correct: 1 },
+				{ q: "What is the deepest known point in Earth's oceans?", a: ["Tonga Trench", "Java Trench", "Challenger Deep", "Puerto Rico Trench"], correct: 2 }
+			] },
+			{ id: "art-eye", title: "Train your art eye", category: "Art & culture", difficulty: "Tricky", questions: 3, minutes: 2, plays: 638, description: "Spot the Renaissance master, decode plein-air painting, and trace Monet's style.", image: "photo-1579783902614-a3fb3927b6a5", imagePosition: "center 40%", quiz: [
+				{ q: "Which artist painted the ceiling of the Sistine Chapel?", a: ["Raphael", "Michelangelo", "Botticelli", "Leonardo da Vinci"], correct: 1 },
+				{ q: "What does 'plein air' painting mean?", a: ["Painting outdoors", "Using only blue tones", "Painting from memory", "Working in miniature"], correct: 0 },
+				{ q: "Which movement is Claude Monet associated with?", a: ["Surrealism", "Cubism", "Impressionism", "Pop art"], correct: 2 }
+			] },
+			{ id: "animal-kingdom", title: "Animal oddities", category: "Nature", difficulty: "Easy", questions: 3, minutes: 2, plays: 884, description: "A quick round of surprising body facts, curious group names, and animal abilities.", image: "photo-1474511320723-9a56873867b5", imagePosition: "center 48%", quiz: [
+				{ q: "Which animal has three hearts?", a: ["Dolphin", "Octopus", "Sea turtle", "Jellyfish"], correct: 1 },
+				{ q: "A group of flamingos is called a...?", a: ["A flamboyance", "A shimmer", "A parade", "A bloom"], correct: 0 },
+				{ q: "Which mammal can truly fly?", a: ["Flying squirrel", "Sugar glider", "Bat", "Colugo"], correct: 2 }
+			] },
+			{ id: "word-origins", title: "Where words come from", category: "Language", difficulty: "Medium", questions: 3, minutes: 2, plays: 492, description: "Follow the unexpected histories of salary, karaoke, and a word born on stage.", image: "photo-1455390582262-044cdead277a", imagePosition: "center 54%", quiz: [
+				{ q: "The word 'salary' traces back to which ancient payment?", a: ["Olive oil", "Salt", "Copper", "Grain"], correct: 1 },
+				{ q: "What does 'karaoke' roughly mean in Japanese?", a: ["Sing along", "Empty orchestra", "Night song", "Mic time"], correct: 1 },
+				{ q: "The word 'robot' first appeared in a play written in which language?", a: ["German", "Czech", "French", "Polish"], correct: 1 }
+			] },
+			{ id: "space-neighbors", title: "Our cosmic neighbors", category: "Science", difficulty: "Easy", questions: 3, minutes: 2, plays: 810, description: "Compare planetary days and moon counts, then visit the solar system's biggest volcano.", image: "photo-1462331940025-496dfbfc7564", imagePosition: "center 45%", quiz: [
+				{ q: "Which planet has the most confirmed moons?", a: ["Jupiter", "Saturn", "Neptune", "Uranus"], correct: 1 },
+				{ q: "Which planet has the longest day?", a: ["Venus", "Mars", "Mercury", "Jupiter"], correct: 0 },
+				{ q: "What is the largest volcano in our solar system?", a: ["Mount Everest", "Olympus Mons", "Mauna Loa", "Elysium Mons"], correct: 1 }
+			] },
+			{ id: "food-stories", title: "Food with a story", category: "Food", difficulty: "Medium", questions: 3, minutes: 2, plays: 577, description: "Trace a pastry's journey and uncover the floral and fruity origins of familiar ingredients.", image: "photo-1504674900247-0877df9cc836", imagePosition: "center 48%", quiz: [
+				{ q: "Where did modern croissants originate?", a: ["France", "Austria", "Switzerland", "Belgium"], correct: 1 },
+				{ q: "Which spice is made from the stigma of a flower?", a: ["Cardamom", "Saffron", "Turmeric", "Star anise"], correct: 1 },
+				{ q: "What fruit is used to make traditional Japanese umeboshi?", a: ["Apricot", "Plum", "Peach", "Cherry"], correct: 1 }
+			] },
+			{ id: "design-everyday", title: "Design all around you", category: "Art & culture", difficulty: "Tricky", questions: 3, minutes: 2, plays: 418, description: "Explore a famous transit map, a mathematical proportion, and an iconic city logo.", image: "photo-1494438639946-1ebd1d20bf85", imagePosition: "center 49%", quiz: [
+				{ q: "Who designed the original London Underground map?", a: ["Frank Pick", "Harry Beck", "Norman Foster", "Charles Holden"], correct: 1 },
+				{ q: "What is the 'golden ratio' approximately?", a: ["1.414", "1.618", "2.718", "3.142"], correct: 1 },
+				{ q: "Which designer is known for the 'I ♥ NY' logo?", a: ["Milton Glaser", "Paul Rand", "Saul Bass", "Massimo Vignelli"], correct: 0 }
+			] },
+			{ id: "weather-wise", title: "Weather-wise", category: "Nature", difficulty: "Medium", questions: 3, minutes: 2, plays: 563, description: "Read storm clouds, compare two temperature scales, and measure the pressure in the air.", image: "photo-1534088568595-a066f410bcda", imagePosition: "center 47%", quiz: [
+				{ q: "What type of cloud is most associated with thunderstorms?", a: ["Cirrus", "Cumulonimbus", "Stratus", "Altostratus"], correct: 1 },
+				{ q: "At what temperature is the Fahrenheit and Celsius reading the same?", a: ["-40", "0", "32", "100"], correct: 0 },
+				{ q: "What instrument measures atmospheric pressure?", a: ["Anemometer", "Barometer", "Hygrometer", "Altimeter"], correct: 1 }
+			] },
+			{ id: "football-fan-facts", title: "Football fan facts", category: "Football", difficulty: "Easy", questions: 3, minutes: 2, plays: 1248, description: "Warm up with team lineups, World Cup history, and modern substitution rules.", image: "photo-1547347298-4074fc3086f0", imagePosition: "center 53%", quiz: [
+				{ q: "How many players does a standard football team start with on the pitch?", a: ["9", "10", "11", "12"], correct: 2 },
+				{ q: "Which country has won the most FIFA World Cups?", a: ["Brazil", "Germany", "Argentina", "Italy"], correct: 0 },
+				{ q: "What is the maximum number of substitutes allowed under most modern FIFA rules?", a: ["3", "4", "5", "6"], correct: 2 }
+			] },
+			{ id: "football-tactics", title: "Tactical football", category: "Football", difficulty: "Medium", questions: 3, minutes: 2, plays: 892, description: "Read the game through offside positioning, defensive formations, and corner routines.", image: "photo-1517466787929-bc90951d0974", imagePosition: "center 52%", quiz: [
+				{ q: "What does 'offside' usually require to be judged against?", a: ["The goalkeeper", "The referee", "The second-last defender", "The bench"], correct: 2 },
+				{ q: "Which formation is commonly associated with three centre-backs?", a: ["4-3-3", "3-5-2", "5-3-2", "4-4-2"], correct: 1 },
+				{ q: "A set piece taken from the side of the field is known as a...?", a: ["Throw-in", "Corner kick", "Goal kick", "Free kick"], correct: 0 }
+			] },
+			{ id: "sports-roundup", title: "Sports round-up", category: "Sports", difficulty: "Easy", questions: 3, minutes: 2, plays: 767, description: "Switch between tennis scoring, golf course basics, and the ultimate distance race.", image: "photo-1517649763962-0c623066013b", imagePosition: "center 45%", quiz: [
+				{ q: "In tennis, what is the term for a score of 40-40?", a: ["Match point", "Break point", "Deuce", "Advantage"], correct: 2 },
+				{ q: "How many holes are on a standard golf course?", a: ["16", "18", "20", "24"], correct: 1 },
+				{ q: "In athletics, which race is generally the longest?", a: ["200m", "400m", "1500m", "Marathon"], correct: 3 }
+			] },
+			{ id: "olympic-moments", title: "Olympic moments", category: "Sports", difficulty: "Medium", questions: 3, minutes: 2, plays: 634, description: "Revisit Olympic origins, the podium, and a winter sport that pairs speed with precision.", image: "photo-1461896836934-ffe607ba8211", imagePosition: "center 48%", quiz: [
+				{ q: "Which colour medal do Olympic winners usually receive first place?", a: ["Silver", "Gold", "Bronze", "Blue"], correct: 1 },
+				{ q: "The Olympic Games were first held in which country?", a: ["France", "Greece", "Italy", "England"], correct: 1 },
+				{ q: "Which sport combines skiing and shooting?", a: ["Biathlon", "Pentathlon", "Decathlon", "Triathlon"], correct: 0 }
+			] },
+			{ id: "movie-magic", title: "Movie magic", category: "Entertainment", difficulty: "Medium", questions: 3, minutes: 2, plays: 703, description: "From animated adventures to a director's dreamscape and a nation in the Marvel universe.", image: "photo-1489599849927-2ee91cede3ba", imagePosition: "center 45%", quiz: [
+				{ q: "Which film features a young lion named Simba?", a: ["Toy Story", "Ice Age", "The Lion King", "Shrek"], correct: 2 },
+				{ q: "Who directed the film 'Inception'?", a: ["Christopher Nolan", "James Cameron", "Denis Villeneuve", "Peter Jackson"], correct: 0 },
+				{ q: "What is the name of the fictional African nation in Black Panther?", a: ["Zamunda", "Wakanda", "Genosha", "Atlantis"], correct: 1 }
+			] },
+			{ id: "history-hits", title: "History in a flash", category: "History", difficulty: "Medium", questions: 3, minutes: 2, plays: 561, description: "Travel from the Moon landing to ancient wonders and the defenses of a vast empire.", image: "photo-1521295121783-8a321d551ad2", imagePosition: "center 40%", quiz: [
+				{ q: "Who was the first person to walk on the Moon?", a: ["Buzz Aldrin", "Yuri Gagarin", "Neil Armstrong", "John Glenn"], correct: 2 },
+				{ q: "The Great Wall of China was primarily built to protect against invasions from which direction?", a: ["South", "East", "North", "West"], correct: 2 },
+				{ q: "Which ancient civilisation built Machu Picchu?", a: ["Maya", "Inca", "Roman", "Aztec"], correct: 1 }
+			] }
+		];
+
+		const generatedQuizCount = 2000;
+		const generatedQuizTopics = [
+			{ title: "Sports superstars", category: "Sports", focus: ["rugby lineups", "tennis scoring", "cycling races", "basketball origins", "golf scoring", "grass-court tennis", "Olympic symbols", "racket sports", "rugby scoring", "cycling jerseys", "basketball free throws", "bowling terms"], image: "photo-1517649763962-0c623066013b", quiz: [
+				{ q: "How many players does a rugby union team have on the field?", a: ["11", "13", "15", "17"], correct: 2 },
+				{ q: "In tennis, what does a score of 40-40 mean?", a: ["Deuce", "Love", "Match point", "A let"], correct: 0 },
+				{ q: "The Tour de France is a famous race in which sport?", a: ["Cycling", "Sailing", "Running", "Car racing"], correct: 0 },
+				{ q: "Who invented the game of basketball?", a: ["James Naismith", "Michael Jordan", "Kobe Bryant", "Walter Camp"], correct: 0 },
+				{ q: "In golf, a birdie means completing a hole how many strokes under par?", a: ["One", "Two", "Three", "Four"], correct: 0 },
+				{ q: "Wimbledon is traditionally played on what surface?", a: ["Grass", "Clay", "Concrete", "Carpet"], correct: 0 },
+				{ q: "How many rings are on the Olympic symbol?", a: ["Four", "Five", "Six", "Seven"], correct: 1 },
+				{ q: "Which sport uses a shuttlecock?", a: ["Badminton", "Squash", "Table tennis", "Volleyball"], correct: 0 },
+				{ q: "How many points is a try worth in rugby union?", a: ["5", "3", "6", "7"], correct: 0 },
+				{ q: "Which colour jersey is worn by the overall leader of the Tour de France?", a: ["Yellow", "Green", "White", "Polka-dot"], correct: 0 },
+				{ q: "How many points is a successful free throw worth in basketball?", a: ["One", "Two", "Three", "Four"], correct: 0 },
+				{ q: "Which sport uses the terms 'strike' and 'spare'?", a: ["Bowling", "Tennis", "Rugby", "Golf"], correct: 0 }
+			] },
+			{ title: "Animal curiosities", category: "Animals", focus: ["octopus anatomy", "flamingo colour", "animal flight", "fast land mammals", "ocean giants", "lion social groups", "dam-building mammals", "young farm animals", "marsupials", "penguin species", "panda diets", "animal camouflage"], image: "photo-1474511320723-9a56873867b5", quiz: [
+				{ q: "Which animal has three hearts?", a: ["Dolphin", "Octopus", "Sea turtle", "Penguin"], correct: 1 },
+				{ q: "What gives flamingos their pink colour?", a: ["Their diet", "Sunlight", "The water they live in", "Their feathers at birth"], correct: 0 },
+				{ q: "Which mammal can truly fly?", a: ["Flying squirrel", "Sugar glider", "Bat", "Colugo"], correct: 2 },
+				{ q: "Which animal is the fastest land mammal?", a: ["Cheetah", "Lion", "Horse", "Leopard"], correct: 0 },
+				{ q: "What is the largest animal known to have lived on Earth?", a: ["African elephant", "Blue whale", "Whale shark", "Brachiosaurus"], correct: 1 },
+				{ q: "What is a group of lions called?", a: ["A pride", "A herd", "A pack", "A colony"], correct: 0 },
+				{ q: "Which animal is famous for building dams?", a: ["Beaver", "Otter", "Badger", "Marmot"], correct: 0 },
+				{ q: "What is a baby goat called?", a: ["A kid", "A calf", "A foal", "A cub"], correct: 0 },
+				{ q: "Which mammal carries its young in a pouch?", a: ["Kangaroo", "Elephant", "Dolphin", "Wolf"], correct: 0 },
+				{ q: "Which penguin species is the largest?", a: ["Emperor penguin", "Little penguin", "King penguin", "Rockhopper penguin"], correct: 0 },
+				{ q: "What do giant pandas eat most of the time?", a: ["Bamboo", "Berries", "Fish", "Tree bark"], correct: 0 },
+				{ q: "Which animal is well known for changing colour to blend into its surroundings?", a: ["Chameleon", "Hedgehog", "Meerkat", "Puffin"], correct: 0 }
+			] },
+			{ title: "TV show trivia", category: "TV shows", focus: ["Friends hangouts", "Doctor Who's time machine", "The Simpsons' hometown", "The Office paper business", "underwater cartoon worlds", "Stranger Things settings", "Bluey's family", "Seinfeld's regular diner", "The Simpsons' neighbours", "small-town dramas", "science-fiction detectives", "gothic school stories"], image: "photo-1522869635100-9f4c5e86aa37", quiz: [
+				{ q: "What is the name of the coffee shop in Friends?", a: ["Central Perk", "Monk's Cafe", "Luke's Diner", "The Peach Pit"], correct: 0 },
+				{ q: "What is the Doctor's time machine called in Doctor Who?", a: ["TARDIS", "DeLorean", "Enterprise", "Baxter Building"], correct: 0 },
+				{ q: "What is the name of the town where The Simpsons live?", a: ["Springfield", "Shelbyville", "Quahog", "South Park"], correct: 0 },
+				{ q: "What is the name of the paper company in The Office (US)?", a: ["Dunder Mifflin", "Sterling Cooper", "Initech", "Pied Piper"], correct: 0 },
+				{ q: "What is the name of SpongeBob SquarePants' underwater home?", a: ["Bikini Bottom", "Coral Cove", "Sea Town", "Atlantis"], correct: 0 },
+				{ q: "Which fictional town is the setting for Stranger Things?", a: ["Hawkins", "Sunnydale", "Riverdale", "Smallville"], correct: 0 },
+				{ q: "What is the name of the family in the animated show about a dog named Bluey?", a: ["The Heeler family", "The Griffin family", "The Pickles family", "The McGill family"], correct: 0 },
+				{ q: "What is the name of the diner where Jerry and friends often meet in Seinfeld?", a: ["Monk's Cafe", "Central Perk", "The Peach Pit", "Luke's Diner"], correct: 0 },
+				{ q: "What is the name of the Simpsons' neighbour who often says 'Hi-diddly-ho'?", a: ["Ned Flanders", "Barney Gumble", "Moe Szyslak", "Chief Wiggum"], correct: 0 },
+				{ q: "What is the name of the town in Gilmore Girls?", a: ["Stars Hollow", "Hawkins", "Sunnydale", "Riverdale"], correct: 0 },
+				{ q: "Which series follows FBI agents Mulder and Scully?", a: ["The X-Files", "Fringe", "Lost", "The Twilight Zone"], correct: 0 },
+				{ q: "What is the name of Wednesday Addams's school in the TV series Wednesday?", a: ["Nevermore Academy", "Hogwarts", "Rydell High", "Starfleet Academy"], correct: 0 }
+			] },
+			{ title: "Movie night", category: "Films", focus: ["Star Wars spacecraft", "Toy Story characters", "Finding Nemo's sea life", "The Lord of the Rings locations", "classic film costumes", "Jaws production stories", "fantasy film schools", "adventure franchises", "adventure archaeologists", "time-traveling cars", "animated music stories", "dinosaur blockbusters"], image: "photo-1489599849927-2ee91cede3ba", quiz: [
+				{ q: "What is the name of the spaceship flown by Han Solo in Star Wars?", a: ["Millennium Falcon", "Serenity", "Nostromo", "Discovery One"], correct: 0 },
+				{ q: "In Toy Story, what kind of toy is Woody?", a: ["Cowboy doll", "Space ranger", "Teddy bear", "Toy dinosaur"], correct: 0 },
+				{ q: "In Finding Nemo, what kind of fish is Nemo?", a: ["Clownfish", "Pufferfish", "Goldfish", "Angelfish"], correct: 0 },
+				{ q: "Where must the One Ring be destroyed in The Lord of the Rings?", a: ["Mount Doom", "Helm's Deep", "Moria", "Rivendell"], correct: 0 },
+				{ q: "In the 1939 film The Wizard of Oz, what colour are Dorothy's famous slippers?", a: ["Ruby red", "Silver", "Golden", "Emerald green"], correct: 0 },
+				{ q: "What nickname did the Jaws production crew give the mechanical shark?", a: ["Bruce", "Bitey", "Chomper", "Jaws"], correct: 0 },
+				{ q: "What is the name of the school in the Harry Potter films?", a: ["Hogwarts", "Nevermore", "Xavier's School", "Brakebills"], correct: 0 },
+				{ q: "Which film series features the archaeologist Indiana Jones?", a: ["Indiana Jones", "The Mummy", "National Treasure", "Tomb Raider"], correct: 0 },
+				{ q: "Who plays Indiana Jones in the original film series?", a: ["Harrison Ford", "Tom Hanks", "Sean Connery", "Hugh Jackman"], correct: 0 },
+				{ q: "Which film features a time-traveling DeLorean?", a: ["Back to the Future", "Groundhog Day", "The Terminator", "E.T. the Extra-Terrestrial"], correct: 0 },
+				{ q: "What is Miguel passionate about in the animated film Coco?", a: ["Music", "Painting", "Cooking", "Football"], correct: 0 },
+				{ q: "Which film takes place in a dinosaur theme park called Jurassic Park?", a: ["Jurassic Park", "King Kong", "Jumanji", "The Lost World"], correct: 0 }
+			] },
+			{ title: "Music moments", category: "Music", focus: ["Queen's frontman", "Liverpool music history", "piano keys", "how pianos work", "reggae roots", "album releases", "symphonic classics", "Yo-Yo Ma's instrument", "vocal ranges", "guitar strings", "Detroit music history", "musical tempo"], image: "photo-1511379938547-c1f69419868d", quiz: [
+				{ q: "Which band was Freddie Mercury the lead singer of?", a: ["Queen", "The Rolling Stones", "ABBA", "The Who"], correct: 0 },
+				{ q: "The Beatles formed in which English city?", a: ["Liverpool", "London", "Manchester", "Bristol"], correct: 0 },
+				{ q: "How many keys does a standard full-size piano have?", a: ["88", "76", "61", "100"], correct: 0 },
+				{ q: "Which instrument has keys, pedals, and strings?", a: ["Piano", "Flute", "Trumpet", "Drum kit"], correct: 0 },
+				{ q: "Reggae music is especially associated with which country?", a: ["Jamaica", "Iceland", "Japan", "Greece"], correct: 0 },
+				{ q: "Which singer released the album 21?", a: ["Adele", "Beyonce", "Rihanna", "Taylor Swift"], correct: 0 },
+				{ q: "Which composer wrote the famous 'Ode to Joy' melody in his Ninth Symphony?", a: ["Ludwig van Beethoven", "Johann Sebastian Bach", "Wolfgang Amadeus Mozart", "Franz Schubert"], correct: 0 },
+				{ q: "Which instrument is Yo-Yo Ma best known for playing?", a: ["Cello", "Violin", "Piano", "Clarinet"], correct: 0 },
+				{ q: "Which singing voice is generally the highest in a traditional choir?", a: ["Soprano", "Alto", "Tenor", "Bass"], correct: 0 },
+				{ q: "How many strings does a standard guitar usually have?", a: ["Six", "Four", "Five", "Eight"], correct: 0 },
+				{ q: "Which US city is most closely associated with the Motown record label?", a: ["Detroit", "Nashville", "New York", "Seattle"], correct: 0 },
+				{ q: "What musical term describes the speed of a piece?", a: ["Tempo", "Timbre", "Harmony", "Pitch"], correct: 0 }
+			] },
+			{ title: "Gaming legends", category: "Gaming", focus: ["Nintendo icons", "block-building games", "electric Pokemon", "Tetris origins", "Zelda heroes", "open-world crime games", "arcade classics", "pink platform heroes", "Mushroom Kingdom royalty", "console makers", "gaming vocabulary", "Minecraft dimensions"], image: "photo-1542751371-adc38448a05e", quiz: [
+				{ q: "Which company created Mario?", a: ["Nintendo", "Sega", "Atari", "Capcom"], correct: 0 },
+				{ q: "What is the name of the block-building game featuring Creepers?", a: ["Minecraft", "Terraria", "Roblox", "Fortnite"], correct: 0 },
+				{ q: "Which Pokemon is well known for its electric powers?", a: ["Pikachu", "Charmander", "Squirtle", "Bulbasaur"], correct: 0 },
+				{ q: "Tetris was originally created in which country?", a: ["Soviet Union", "Japan", "United States", "Sweden"], correct: 0 },
+				{ q: "What is the name of the hero in The Legend of Zelda games?", a: ["Link", "Zelda", "Ganon", "Epona"], correct: 0 },
+				{ q: "Which game series features the city of Los Santos?", a: ["Grand Theft Auto", "The Sims", "Need for Speed", "Watch Dogs"], correct: 0 },
+				{ q: "What is the name of the yellow character in Pac-Man?", a: ["Pac-Man", "Q*bert", "Kirby", "Sonic"], correct: 0 },
+				{ q: "Which pink character is the star of the Kirby video games?", a: ["Kirby", "Yoshi", "Pikachu", "Jigglypuff"], correct: 0 },
+				{ q: "What is the name of the princess Mario often sets out to rescue?", a: ["Princess Peach", "Princess Daisy", "Princess Zelda", "Princess Rosalina"], correct: 0 },
+				{ q: "Which company makes the PlayStation family of consoles?", a: ["Sony", "Nintendo", "Sega", "Microsoft"], correct: 0 },
+				{ q: "What does NPC stand for in video games?", a: ["Non-player character", "New playable character", "Network player control", "Non-pausable challenge"], correct: 0 },
+				{ q: "What is the name of the main world in Minecraft?", a: ["The Overworld", "The End", "The Nether", "The Aether"], correct: 0 }
+			] },
+			{ title: "Foodie favorites", category: "Food", focus: ["pesto ingredients", "Japanese cuisine", "avocado dishes", "fermented foods", "Italian desserts", "saffron harvests", "risotto grains", "chickpea dips", "pasta textures", "soy-based foods", "Greek salads", "Spanish rice dishes"], image: "photo-1490645935967-10de6ba17061", quiz: [
+				{ q: "Pesto is traditionally made with which herb?", a: ["Basil", "Mint", "Dill", "Parsley"], correct: 0 },
+				{ q: "Sushi is most closely associated with which country?", a: ["Japan", "Mexico", "Greece", "India"], correct: 0 },
+				{ q: "What is the main ingredient in guacamole?", a: ["Avocado", "Cucumber", "Peas", "Zucchini"], correct: 0 },
+				{ q: "What type of food is miso?", a: ["Fermented soybean paste", "A type of rice", "A seaweed salad", "A noodle"], correct: 0 },
+				{ q: "Tiramisu is a dessert that originated in which country?", a: ["Italy", "France", "Portugal", "Austria"], correct: 0 },
+				{ q: "Which flower gives us the spice saffron?", a: ["Crocus", "Rose", "Sunflower", "Jasmine"], correct: 0 },
+				{ q: "Which grain is traditionally used to make risotto?", a: ["Rice", "Barley", "Couscous", "Oats"], correct: 0 },
+				{ q: "What is the main ingredient in hummus?", a: ["Chickpeas", "Lentils", "Black beans", "Peanuts"], correct: 0 },
+				{ q: "What does the Italian phrase 'al dente' describe?", a: ["Pasta cooked firm to the bite", "Bread baked until golden", "Cheese aged for a long time", "Fruit served chilled"], correct: 0 },
+				{ q: "Tofu is most commonly made from which ingredient?", a: ["Soybeans", "Chickpeas", "Rice", "Lentils"], correct: 0 },
+				{ q: "Which cheese is traditionally used in a Greek salad?", a: ["Feta", "Cheddar", "Gouda", "Brie"], correct: 0 },
+				{ q: "Paella is a rice dish that originated in which country?", a: ["Spain", "Portugal", "Italy", "Mexico"], correct: 0 }
+			] },
+			{ title: "Space explorers", category: "Space", focus: ["giant planets", "planet nicknames", "ring systems", "early spaceflight", "Martian moons", "extreme planetary heat", "our home galaxy", "astronaut equipment", "inner planets", "measuring cosmic distance", "unusual planetary rotation", "asteroids"], image: "photo-1614730321146-b6fa6a46bcb4", quiz: [
+				{ q: "Which planet is the largest in our solar system?", a: ["Jupiter", "Saturn", "Neptune", "Earth"], correct: 0 },
+				{ q: "Which planet is often called the Red Planet?", a: ["Mars", "Venus", "Mercury", "Uranus"], correct: 0 },
+				{ q: "What are Saturn's rings mostly made of?", a: ["Ice and rock", "Liquid water", "Clouds of gas", "Lava"], correct: 0 },
+				{ q: "Who was the first human to travel into space?", a: ["Yuri Gagarin", "Neil Armstrong", "Valentina Tereshkova", "John Glenn"], correct: 0 },
+				{ q: "How many known moons does Mars have?", a: ["Two", "One", "Four", "Seven"], correct: 0 },
+				{ q: "Which planet has the hottest surface in our solar system?", a: ["Venus", "Mercury", "Mars", "Jupiter"], correct: 0 },
+				{ q: "What is the name of the galaxy that contains our solar system?", a: ["The Milky Way", "Andromeda", "The Whirlpool Galaxy", "The Sombrero Galaxy"], correct: 0 },
+				{ q: "What do astronauts wear to protect themselves outside a spacecraft?", a: ["A spacesuit", "A pressure coat", "A flight jacket", "A thermal blanket"], correct: 0 },
+				{ q: "Which planet is closest to the Sun?", a: ["Mercury", "Venus", "Earth", "Mars"], correct: 0 },
+				{ q: "What does a light-year measure?", a: ["Distance", "Time", "Brightness", "Temperature"], correct: 0 },
+				{ q: "Which planet is known for rotating on an extreme tilt?", a: ["Uranus", "Mars", "Venus", "Mercury"], correct: 0 },
+				{ q: "What is the name for a small rocky body that orbits the Sun?", a: ["Asteroid", "Comet", "Moon", "Nebula"], correct: 0 }
+			] }
+		];
+
+		const expandedQuizCount = 500;
+		const expandedQuizTopics = [
+			{ title: "Geography discoveries", category: "Geography", focus: ["Paris waterways", "New Zealand capitals", "Jordanian landmarks", "East African mountains", "Mediterranean islands", "Icelandic capitals", "bordering seas", "Japanese islands", "North American borders", "African geography", "East African capitals", "Southeast Asian temples"], image: "photo-1470770841072-f978cf4d019e", quiz: [
+				{ q: "Which river flows through Paris?", a: ["The Seine", "The Rhine", "The Danube", "The Po"], correct: 0 },
+				{ q: "What is the capital of New Zealand?", a: ["Wellington", "Auckland", "Christchurch", "Dunedin"], correct: 0 },
+				{ q: "Which country is home to the ancient city of Petra?", a: ["Jordan", "Egypt", "Greece", "Lebanon"], correct: 0 },
+				{ q: "Mount Kilimanjaro is located in which country?", a: ["Tanzania", "Kenya", "Ethiopia", "Uganda"], correct: 0 },
+				{ q: "Which is the largest island in the Mediterranean Sea?", a: ["Sicily", "Crete", "Cyprus", "Sardinia"], correct: 0 },
+				{ q: "What is the capital of Iceland?", a: ["Reykjavik", "Oslo", "Helsinki", "Nuuk"], correct: 0 },
+				{ q: "Which sea separates the European and African continents?", a: ["The Mediterranean Sea", "The Baltic Sea", "The North Sea", "The Black Sea"], correct: 0 },
+				{ q: "The city of Kyoto is on which Japanese island?", a: ["Honshu", "Hokkaido", "Shikoku", "Kyushu"], correct: 0 },
+				{ q: "Which country shares the longest international land border with the United States?", a: ["Canada", "Mexico", "Russia", "Cuba"], correct: 0 },
+				{ q: "Which continent contains the greatest number of countries?", a: ["Africa", "Asia", "Europe", "South America"], correct: 0 },
+				{ q: "What is the capital city of Kenya?", a: ["Nairobi", "Mombasa", "Kampala", "Addis Ababa"], correct: 0 },
+				{ q: "Angkor Wat is a famous temple complex in which country?", a: ["Cambodia", "Thailand", "Vietnam", "Laos"], correct: 0 }
+			] },
+			{ title: "Science in everyday life", category: "Science", focus: ["plant chemistry", "element symbols", "cell biology", "orbital forces", "water and temperature", "the circulatory system", "nearby stars", "states of matter", "DNA", "vitamins and sunlight", "acidity scales", "sound waves"], image: "photo-1532094349884-543bc11b234d", quiz: [
+				{ q: "Which gas do plants absorb from the atmosphere during photosynthesis?", a: ["Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"], correct: 0 },
+				{ q: "What is the chemical symbol for gold?", a: ["Au", "Ag", "Fe", "Gd"], correct: 0 },
+				{ q: "Which part of a human cell contains most of its genetic material?", a: ["The nucleus", "The membrane", "The ribosome", "The cytoplasm"], correct: 0 },
+				{ q: "What force keeps planets in orbit around the Sun?", a: ["Gravity", "Magnetism", "Friction", "Buoyancy"], correct: 0 },
+				{ q: "At sea level, what is the boiling point of water in Celsius?", a: ["100 degrees", "50 degrees", "0 degrees", "212 degrees"], correct: 0 },
+				{ q: "Which organ pumps blood around the human body?", a: ["The heart", "The liver", "The lungs", "The kidneys"], correct: 0 },
+				{ q: "What is the closest star to Earth?", a: ["The Sun", "Proxima Centauri", "Sirius", "Alpha Centauri A"], correct: 0 },
+				{ q: "Which state of matter has a fixed volume but takes the shape of its container?", a: ["Liquid", "Solid", "Gas", "Plasma"], correct: 0 },
+				{ q: "What does the abbreviation DNA stand for?", a: ["Deoxyribonucleic acid", "Dynamic nitrogen atom", "Double nucleotide array", "Deoxygenated nucleic acid"], correct: 0 },
+				{ q: "Which vitamin can the human body produce when skin is exposed to sunlight?", a: ["Vitamin D", "Vitamin A", "Vitamin C", "Vitamin K"], correct: 0 },
+				{ q: "On the pH scale, what number is neutral at room temperature?", a: ["7", "0", "5", "14"], correct: 0 },
+				{ q: "Sound generally travels faster through which of these?", a: ["Water", "Air", "A vacuum", "They are all the same"], correct: 0 }
+			] },
+			{ title: "Art and culture", category: "Art & culture", focus: ["Renaissance masterpieces", "chamber music", "Paris museums", "surrealist art", "paper-folding traditions", "ancient Greek architecture", "found-object sculpture", "Argentine dance", "post-impressionist art", "modern history painting", "Japanese flower arranging", "poetic forms"], image: "photo-1579783902614-a3fb3927b6a5", quiz: [
+				{ q: "Who painted the ceiling of the Sistine Chapel?", a: ["Michelangelo", "Raphael", "Titian", "Caravaggio"], correct: 0 },
+				{ q: "Which instrument is central to a traditional string quartet?", a: ["Violin", "Trumpet", "Flute", "Tuba"], correct: 0 },
+				{ q: "In which city is the Louvre museum?", a: ["Paris", "Rome", "Madrid", "Vienna"], correct: 0 },
+				{ q: "Which art movement is strongly associated with Salvador Dalí?", a: ["Surrealism", "Impressionism", "Cubism", "Futurism"], correct: 0 },
+				{ q: "What is the Japanese art of paper folding called?", a: ["Origami", "Ikebana", "Bonsai", "Shodo"], correct: 0 },
+				{ q: "Which Greek structure is famous for its columns on the Acropolis in Athens?", a: ["The Parthenon", "The Colosseum", "The Pantheon", "The Erechtheion"], correct: 0 },
+				{ q: "What is a sculpture made by assembling found objects often called?", a: ["An assemblage", "A sonnet", "A fresco", "A lithograph"], correct: 0 },
+				{ q: "Which dance style is closely associated with Argentina?", a: ["Tango", "Waltz", "Flamenco", "Samba"], correct: 0 },
+				{ q: "Who painted the famous night-sky scene The Starry Night?", a: ["Vincent van Gogh", "Claude Monet", "Pablo Picasso", "Paul Cézanne"], correct: 0 },
+				{ q: "Which artist painted the large anti-war work Guernica?", a: ["Pablo Picasso", "Salvador Dalí", "Henri Matisse", "Georgia O'Keeffe"], correct: 0 },
+				{ q: "What is the Japanese tradition of arranging flowers called?", a: ["Ikebana", "Origami", "Bonsai", "Shodo"], correct: 0 },
+				{ q: "What is a poem with fourteen lines traditionally called?", a: ["A sonnet", "A haiku", "A limerick", "An ode"], correct: 0 }
+			] },
+			{ title: "Nature's small wonders", category: "Nature", focus: ["coral reef ecosystems", "water in plants", "fungal science", "cold-climate biomes", "how bees make honey", "animal migration", "trees and seeds", "Earth's climate", "photosynthesis", "egg-laying mammals", "tropical rainforests", "frog life cycles"], image: "photo-1470252649378-9c29740c9fa8", quiz: [
+				{ q: "What is the largest living structure on Earth?", a: ["The Great Barrier Reef", "The Amazon rainforest", "The Grand Canyon", "The Sahara"], correct: 0 },
+				{ q: "Which process allows water to move from plant leaves into the air?", a: ["Transpiration", "Pollination", "Germination", "Fermentation"], correct: 0 },
+				{ q: "What is the name for a scientist who studies fungi?", a: ["A mycologist", "A botanist", "An entomologist", "A geologist"], correct: 0 },
+				{ q: "Which biome is characterized by permafrost and very short growing seasons?", a: ["Tundra", "Savanna", "Temperate forest", "Chaparral"], correct: 0 },
+				{ q: "What do bees collect from flowers to make honey?", a: ["Nectar", "Pollen only", "Sap", "Dew"], correct: 0 },
+				{ q: "What is the name for the seasonal movement of animals from one region to another?", a: ["Migration", "Hibernation", "Camouflage", "Metamorphosis"], correct: 0 },
+				{ q: "Which tree produces acorns?", a: ["Oak", "Birch", "Maple", "Willow"], correct: 0 },
+				{ q: "What is the main natural source of energy for Earth's climate system?", a: ["The Sun", "The Moon", "Earth's core", "Ocean tides"], correct: 0 },
+				{ q: "Which gas do plants release into the air during photosynthesis?", a: ["Oxygen", "Carbon dioxide", "Nitrogen", "Methane"], correct: 0 },
+				{ q: "Which egg-laying mammal is native to Australia?", a: ["Platypus", "Koala", "Wombat", "Kangaroo"], correct: 0 },
+				{ q: "Which forest is the largest tropical rainforest on Earth?", a: ["The Amazon rainforest", "The Black Forest", "The Daintree Rainforest", "The Sherwood Forest"], correct: 0 },
+				{ q: "What is a young frog called?", a: ["A tadpole", "A cub", "A chick", "A kit"], correct: 0 }
+			] },
+			{ title: "Language curiosities", category: "Language", focus: ["languages of Brazil", "Arabic writing", "word relationships", "Dutch language", "punctuation", "the ancient Roman language", "abbreviations and acronyms", "language families", "Korean writing", "English spelling", "parts of speech", "irregular plurals"], image: "photo-1455390582262-044cdead277a", quiz: [
+				{ q: "What is the most widely spoken language in Brazil?", a: ["Portuguese", "Spanish", "French", "Italian"], correct: 0 },
+				{ q: "Which writing system is used for modern standard Arabic?", a: ["The Arabic script", "The Cyrillic script", "The Devanagari script", "The Hangul script"], correct: 0 },
+				{ q: "What do we call a word that has the opposite meaning of another word?", a: ["An antonym", "A synonym", "A homonym", "An acronym"], correct: 0 },
+				{ q: "Which language is primarily spoken in the Netherlands?", a: ["Dutch", "Danish", "Norwegian", "Swedish"], correct: 0 },
+				{ q: "What punctuation mark usually ends a direct question?", a: ["A question mark", "A semicolon", "A colon", "A hyphen"], correct: 0 },
+				{ q: "Which ancient language was spoken in Rome?", a: ["Latin", "Ancient Greek", "Sanskrit", "Phoenician"], correct: 0 },
+				{ q: "What is a word formed from the first letters of a phrase, such as NASA, called?", a: ["An acronym", "A palindrome", "An idiom", "A simile"], correct: 0 },
+				{ q: "Which language family includes Spanish, French, and Italian?", a: ["Romance languages", "Germanic languages", "Slavic languages", "Celtic languages"], correct: 0 },
+				{ q: "What is the name of the writing system used for the Korean language?", a: ["Hangul", "Katakana", "Cyrillic", "Arabic script"], correct: 0 },
+				{ q: "How many letters are in the modern English alphabet?", a: ["26", "24", "28", "32"], correct: 0 },
+				{ q: "Which part of speech names a person, place, thing, or idea?", a: ["Noun", "Verb", "Adverb", "Conjunction"], correct: 0 },
+				{ q: "What is the usual plural form of the word 'child'?", a: ["Children", "Childs", "Childes", "Childrens"], correct: 0 }
+			] },
+			{ title: "History, one moment at a time", category: "History", focus: ["ancient Egyptian engineering", "space-age milestones", "printing technology", "Cold War Berlin", "medieval charters", "early Atlantic voyages", "Roman infrastructure", "aviation pioneers", "the end of World War II", "ancient Roman cities", "Roman architecture", "early US leadership"], image: "photo-1521295121783-8a321d551ad2", quiz: [
+				{ q: "Which ancient civilization built the pyramids at Giza?", a: ["Ancient Egyptians", "Ancient Romans", "Ancient Greeks", "The Phoenicians"], correct: 0 },
+				{ q: "In which year did the first Moon landing take place?", a: ["1969", "1959", "1979", "1989"], correct: 0 },
+				{ q: "Who is credited with developing the movable-type printing press in Europe?", a: ["Johannes Gutenberg", "Leonardo da Vinci", "Galileo Galilei", "Isaac Newton"], correct: 0 },
+				{ q: "Which city was divided by a wall from 1961 until 1989?", a: ["Berlin", "Prague", "Vienna", "Warsaw"], correct: 0 },
+				{ q: "The Magna Carta was sealed in which year?", a: ["1215", "1066", "1492", "1666"], correct: 0 },
+				{ q: "Which ship carried the Pilgrims to North America in 1620?", a: ["Mayflower", "Endeavour", "Beagle", "Santa Maria"], correct: 0 },
+				{ q: "Which empire built a vast road network centered on the city of Rome?", a: ["The Roman Empire", "The Aztec Empire", "The Maurya Empire", "The Mongol Empire"], correct: 0 },
+				{ q: "Who was the first woman to fly solo across the Atlantic Ocean?", a: ["Amelia Earhart", "Bessie Coleman", "Valentina Tereshkova", "Harriet Quimby"], correct: 0 },
+				{ q: "In which year did World War II end?", a: ["1945", "1939", "1941", "1950"], correct: 0 },
+				{ q: "Which ancient city was buried by the eruption of Mount Vesuvius?", a: ["Pompeii", "Athens", "Carthage", "Alexandria"], correct: 0 },
+				{ q: "What is the name of the famous ancient Roman amphitheatre in Rome?", a: ["The Colosseum", "The Parthenon", "The Pantheon", "The Forum"], correct: 0 },
+				{ q: "Who became the first president of the United States?", a: ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "John Adams"], correct: 0 }
+			] },
+			{ title: "Football, beyond the score", category: "Football", focus: ["match timing", "penalty-area distances", "World Cup champions", "penalty decisions", "goalkeeper rules", "disciplinary cards", "World Cup formats", "scoring milestones", "touchline restarts", "match halves", "video reviews", "football history"], image: "photo-1517466787929-bc90951d0974", quiz: [
+				{ q: "How long is a standard football match, excluding stoppage time and extra time?", a: ["90 minutes", "80 minutes", "100 minutes", "120 minutes"], correct: 0 },
+				{ q: "How far is the penalty spot from the goal line?", a: ["11 metres", "9 metres", "12 metres", "15 metres"], correct: 0 },
+				{ q: "Which country won the 2022 men's FIFA World Cup?", a: ["Argentina", "France", "Brazil", "Croatia"], correct: 0 },
+				{ q: "What is awarded when a defender commits a direct-free-kick offence inside their own penalty area?", a: ["A penalty kick", "A corner kick", "A goal kick", "A throw-in"], correct: 0 },
+				{ q: "Which position is the only one normally allowed to handle the ball during open play?", a: ["Goalkeeper", "Centre-back", "Striker", "Winger"], correct: 0 },
+				{ q: "What colour card means a player is sent off?", a: ["Red", "Yellow", "Blue", "Green"], correct: 0 },
+				{ q: "How many teams competed in the 2022 men's FIFA World Cup finals?", a: ["32", "24", "28", "36"], correct: 0 },
+				{ q: "What is the term for scoring three goals by one player in a match?", a: ["A hat-trick", "A brace", "A clean sheet", "A volley"], correct: 0 },
+				{ q: "What restart is awarded when the ball completely crosses a touchline?", a: ["A throw-in", "A corner kick", "A goal kick", "A drop ball"], correct: 0 },
+				{ q: "How long is each half of a standard football match, before added time?", a: ["45 minutes", "40 minutes", "50 minutes", "60 minutes"], correct: 0 },
+				{ q: "What does the abbreviation VAR stand for in football?", a: ["Video Assistant Referee", "Verified Action Review", "Virtual Assistant Replay", "Video Analysis Rule"], correct: 0 },
+				{ q: "In which country were the Football Association's modern rules first established in 1863?", a: ["England", "Scotland", "Brazil", "Italy"], correct: 0 }
+			] },
+			{ title: "Entertainment snapshots", category: "Entertainment", focus: ["animated kingdoms", "classic detectives", "storybook characters", "musical high schools", "comic-book heroes", "animated adventures", "robot protagonists", "wizarding sports", "Frozen's reindeer", "Middle-earth creatures", "wizarding companions", "comic-book cities"], image: "photo-1489599849927-2ee91cede3ba", quiz: [
+				{ q: "What is the name of the kingdom in Disney's Frozen?", a: ["Arendelle", "Corona", "Atlantica", "DunBroch"], correct: 0 },
+				{ q: "Which fictional detective lives at 221B Baker Street?", a: ["Sherlock Holmes", "Hercule Poirot", "Miss Marple", "Philip Marlowe"], correct: 0 },
+				{ q: "In The Wizard of Oz, what does the Scarecrow hope to receive?", a: ["A brain", "A heart", "Courage", "A home"], correct: 0 },
+				{ q: "What is the name of the school attended by the students in the musical Grease?", a: ["Rydell High", "East High", "North Shore High", "Hill Valley High"], correct: 0 },
+				{ q: "Which fictional superhero is also known as the Dark Knight?", a: ["Batman", "Superman", "Spider-Man", "The Flash"], correct: 0 },
+				{ q: "What is the name of the kingdom where the story of The Lion King takes place?", a: ["The Pride Lands", "Far Far Away", "Neverland", "The Enchanted Forest"], correct: 0 },
+				{ q: "Which animated film features a robot named WALL-E?", a: ["WALL-E", "Up", "Cars", "Ratatouille"], correct: 0 },
+				{ q: "In the Harry Potter stories, what sport is played on flying broomsticks?", a: ["Quidditch", "Gobstones", "Wizard's Chess", "Duelling"], correct: 0 },
+				{ q: "What is the name of Anna and Elsa's reindeer friend in Frozen?", a: ["Sven", "Olaf", "Kristoff", "Marshmallow"], correct: 0 },
+				{ q: "What kind of creature is Frodo in The Lord of the Rings?", a: ["A hobbit", "An elf", "A dwarf", "A wizard"], correct: 0 },
+				{ q: "What is the name of Harry Potter's snowy owl?", a: ["Hedwig", "Crookshanks", "Fawkes", "Buckbeak"], correct: 0 },
+				{ q: "What is the name of the fictional city most closely associated with Batman?", a: ["Gotham City", "Metropolis", "Central City", "Star City"], correct: 0 }
+			] }
+		];
+
+		function makeGeneratedQuestion(question, seed) {
+			const shift = seed % question.a.length;
+			const answers = [...question.a.slice(shift), ...question.a.slice(0, shift)];
+			return {
+				q: question.q,
+				a: answers,
+				correct: (question.correct - shift + question.a.length) % question.a.length
+			};
+		}
+
+		const questionRoundCache = new Map();
+
+		function makeQuestionRounds(questionCount) {
+			if (questionRoundCache.has(questionCount)) return questionRoundCache.get(questionCount);
+			const rounds = [];
+			for (let first = 0; first < questionCount - 2; first++) {
+				for (let second = first + 1; second < questionCount - 1; second++) {
+					for (let third = second + 1; third < questionCount; third++) {
+						rounds.push(
+							[first, second, third],
+							[first, third, second],
+							[second, first, third],
+							[second, third, first],
+							[third, first, second],
+							[third, second, first]
+						);
+					}
+				}
+			}
+			questionRoundCache.set(questionCount, rounds);
+			return rounds;
+		}
+
+		function makeQuizDescription(topic, questionIndices, localIndex) {
+			const focusAreas = [...new Set(questionIndices.map((questionIndex) => topic.focus[questionIndex]))];
+			const lastFocus = focusAreas.pop();
+			const focusText = focusAreas.length ? `${focusAreas.join(", ")} and ${lastFocus}` : lastFocus;
+			const descriptions = [
+				`Take a quick trip through ${focusText}, with fresh questions and a few surprises.`,
+				`Put your ${topic.category.toLowerCase()} knowledge to work across ${focusText}.`,
+				`Three quick questions on ${focusText}—see how many details you can spot.`
+			];
+			return descriptions[(localIndex - 1) % descriptions.length];
+		}
+
+		function makeGeneratedQuiz(index) {
+			const topicIndex = index % generatedQuizTopics.length;
+			const localIndex = Math.floor(index / generatedQuizTopics.length) + 1;
+			const topic = generatedQuizTopics[topicIndex];
+			const questionRounds = makeQuestionRounds(topic.quiz.length);
+			const questionIndices = questionRounds[(localIndex - 1) % questionRounds.length];
+			const questions = questionIndices.map((questionIndex, indexInQuiz) =>
+				makeGeneratedQuestion(topic.quiz[questionIndex], localIndex + indexInQuiz)
+			);
+
+			return {
+				id: `generated-trivia-${index + 1}`,
+				title: `${topic.title} #${String(localIndex).padStart(3, "0")}`,
+				category: topic.category,
+				difficulty: ["Easy", "Medium", "Tricky"][(localIndex - 1) % 3],
+				questions: questions.length,
+				minutes: 3,
+				plays: 350 - localIndex % 300,
+				description: makeQuizDescription(topic, questionIndices, localIndex),
+				image: topic.image,
+				imagePosition: "center 49%",
+				quiz: questions
+			};
+		}
+
+		quizzes.push(...Array.from({ length: generatedQuizCount }, (_, index) => makeGeneratedQuiz(index)));
+
+		function makeExpandedQuiz(index) {
+			const topicIndex = index % expandedQuizTopics.length;
+			const localIndex = Math.floor(index / expandedQuizTopics.length) + 1;
+			const topic = expandedQuizTopics[topicIndex];
+			const questionRounds = makeQuestionRounds(topic.quiz.length);
+			const questionIndices = questionRounds[(localIndex - 1) % questionRounds.length];
+			const questions = questionIndices.map((questionIndex, indexInQuiz) =>
+				makeGeneratedQuestion(topic.quiz[questionIndex], localIndex + indexInQuiz)
+			);
+
+			return {
+				id: `expanded-trivia-${index + 1}`,
+				title: `${topic.title} #${String(localIndex).padStart(3, "0")}`,
+				category: topic.category,
+				difficulty: ["Easy", "Medium", "Tricky"][(localIndex - 1) % 3],
+				questions: questions.length,
+				minutes: 3,
+				plays: 350 - localIndex % 300,
+				description: makeQuizDescription(topic, questionIndices, localIndex),
+				image: topic.image,
+				imagePosition: "center 49%",
+				quiz: questions
+			};
+		}
+
+		quizzes.push(...Array.from({ length: expandedQuizCount }, (_, index) => makeExpandedQuiz(index)));
+
+		const categoryNames = ["All quizzes", ...new Set(quizzes.map((quiz) => quiz.category))];
+		const savedIds = new Set();
+		const initialVisibleCount = 6;
+		const state = { category: "All quizzes", difficulty: "All levels", query: "", sort: "popular", savedOnly: false, visibleCount: initialVisibleCount };
+		const historyStorageKey = "quizletto-history";
+		const storage = (() => {
+			try {
+				const testKey = "__quizletto_storage_test__";
+				window.localStorage.setItem(testKey, testKey);
+				window.localStorage.removeItem(testKey);
+				return window.localStorage;
+			} catch (error) {
+				return null;
+			}
+		})();
+		let quizHistory = [];
+		let historyStorageError = "";
+		if (storage) {
+			try {
+				const storedHistory = storage.getItem(historyStorageKey);
+				if (storedHistory !== null) {
+					const parsedHistory = JSON.parse(storedHistory);
+					if (!Array.isArray(parsedHistory)) throw new Error("Stored quiz history is not a list.");
+					quizHistory = parsedHistory.filter((result) => {
+						if (!result || typeof result !== "object") return false;
+						const quiz = quizzes.find((item) => item.id === result.quizId);
+						return quiz &&
+							Number.isInteger(result.score) &&
+							Number.isInteger(result.total) &&
+							result.total === quiz.quiz.length &&
+							result.score >= 0 &&
+							result.score <= result.total &&
+							typeof result.completedAt === "string" &&
+							Number.isFinite(Date.parse(result.completedAt));
+					});
+				}
+			} catch (error) {
+				historyStorageError = "Your saved quiz history couldn't be loaded. New results may still appear for this visit.";
+			}
+		}
+		let activeQuiz = null;
+		let questionIndex = 0;
+		let score = 0;
+		let answered = false;
+
+		const quizGrid = document.getElementById("quizGrid");
+		const searchInput = document.getElementById("searchInput");
+		const categoryList = document.getElementById("categoryList");
+		const modal = document.getElementById("quizModal");
+
+		function renderCategories() {
+			categoryList.innerHTML = categoryNames.map((name) => {
+				const count = name === "All quizzes" ? quizzes.length : quizzes.filter((quiz) => quiz.category === name).length;
+				return `<button class="category-button${state.category === name ? " active" : ""}" type="button" data-category="${name}" aria-pressed="${state.category === name}"><span>${name}</span><span class="category-count">${count}</span></button>`;
+			}).join("");
+		}
+
+		function filteredQuizzes() {
+			let results = quizzes.filter((quiz) => {
+				const matchesCategory = state.category === "All quizzes" || quiz.category === state.category;
+				const matchesDifficulty = state.difficulty === "All levels" || quiz.difficulty === state.difficulty;
+				const haystack = `${quiz.title} ${quiz.category} ${quiz.description}`.toLowerCase();
+				const matchesQuery = haystack.includes(state.query.toLowerCase());
+				return matchesCategory && matchesDifficulty && matchesQuery && (!state.savedOnly || savedIds.has(quiz.id));
+			});
+			if (state.sort === "az") results.sort((first, second) => first.title.localeCompare(second.title));
+			if (state.sort === "short") results.sort((first, second) => first.minutes - second.minutes);
+			if (state.sort === "popular") results.sort((first, second) => second.plays - first.plays);
+			return results;
+		}
+
+		function renderQuizzes() {
+			const results = filteredQuizzes();
+			const visibleResults = results.slice(0, state.visibleCount);
+			document.getElementById("resultsCount").textContent = `${results.length} ${results.length === 1 ? "quiz" : "quizzes"}`;
+			document.getElementById("catalogTitle").firstChild.textContent = state.savedOnly ? "Your saved quizzes " : "Explore quizzes ";
+			const loadMoreWrap = document.getElementById("loadMoreWrap");
+			loadMoreWrap.hidden = !(results.length > visibleResults.length);
+			quizGrid.innerHTML = visibleResults.length ? visibleResults.map((quiz) => `
+				<article class="quiz-card">
+					<div class="card-image" role="img" aria-label="${quiz.category} quiz cover" style="background-image:url('https://images.unsplash.com/${quiz.image}?auto=format&fit=crop&w=700&q=80');background-position:${quiz.imagePosition}">
+						<span class="card-category">${quiz.category}</span>
+						<button class="bookmark${savedIds.has(quiz.id) ? " saved" : ""}" type="button" data-save="${quiz.id}" aria-label="${savedIds.has(quiz.id) ? "Remove from" : "Save to"} saved quizzes" aria-pressed="${savedIds.has(quiz.id)}">
+							<svg viewBox="0 0 24 24" fill="${savedIds.has(quiz.id) ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-4-6 4V4.8Z"/></svg>
+						</button>
+					</div>
+					<div class="card-body">
+						<h3>${quiz.title}</h3>
+						<p class="card-description">${quiz.description}</p>
+						<div class="card-footer"><span class="card-meta"><span>${quiz.questions} questions</span><span>${quiz.minutes} min</span><span class="difficulty">${quiz.difficulty}</span></span><button class="play-link" type="button" data-quiz="${quiz.id}">Play <span aria-hidden="true">→</span></button></div>
+					</div>
+				</article>`).join("") : `<div class="empty-state"><strong>No quizzes found</strong>Try another search or clear a filter to keep exploring.</div>`;
+			if (!visibleResults.length && results.length) {
+				state.visibleCount = initialVisibleCount;
+			}
+		}
+
+		function render() { renderCategories(); renderQuizzes(); }
+
+		function renderHistory() {
+			const notice = document.getElementById("historyNotice");
+			notice.textContent = historyStorageError;
+			notice.hidden = !historyStorageError;
+			const historyList = document.getElementById("historyList");
+			const orderedHistory = [...quizHistory].sort((first, second) => Date.parse(second.completedAt) - Date.parse(first.completedAt));
+			if (!orderedHistory.length) {
+				historyList.innerHTML = `<div class="empty-state"><strong>No completed quizzes yet</strong>Finish a quiz and your score will show up here.</div>`;
+				return;
+			}
+			const percentages = orderedHistory.map((result) => Math.round(result.score / result.total * 100));
+			const average = Math.round(percentages.reduce((sum, percentage) => sum + percentage, 0) / percentages.length);
+			historyList.innerHTML = `<p class="intro-copy">${orderedHistory.length} ${orderedHistory.length === 1 ? "quiz" : "quizzes"} completed · ${average}% average score</p>` + orderedHistory.map((result) => {
+				const quiz = quizzes.find((item) => item.id === result.quizId);
+				const percentage = Math.round(result.score / result.total * 100);
+				const completed = new Date(result.completedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+				return `<article class="history-card">
+					<div class="history-info"><span class="history-date">${completed}</span><h2>${quiz.title}</h2><p>${quiz.category} · ${quiz.difficulty} · ${result.total} questions</p></div>
+					<div class="history-result"><div class="history-score"><strong>${result.score}/${result.total}</strong><span>${percentage}% correct</span></div><button class="button secondary" type="button" data-replay="${quiz.id}">Play again <span aria-hidden="true">→</span></button></div>
+				</article>`;
+			}).join("");
+		}
+
+		function showView(view) {
+			const isHistory = view === "history";
+			document.getElementById("discover").hidden = isHistory;
+			document.getElementById("historyPage").hidden = !isHistory;
+			document.querySelectorAll(".nav a").forEach((link) => {
+				const active = link.id === "historyLink" ? isHistory :
+					link.id === "savedLink" ? !isHistory && state.savedOnly :
+					!isHistory && !state.savedOnly;
+				link.classList.toggle("nav-active", active);
+				if (active) link.setAttribute("aria-current", "page");
+				else link.removeAttribute("aria-current");
+			});
+		}
+
+		function openQuiz(id) {
+			activeQuiz = quizzes.find((quiz) => quiz.id === id);
+			if (!activeQuiz) return;
+			questionIndex = 0;
+			score = 0;
+			document.getElementById("quizTitle").textContent = activeQuiz.title;
+			document.getElementById("quizSubtitle").textContent = `${activeQuiz.category} · ${activeQuiz.difficulty}`;
+			document.getElementById("questionView").hidden = false;
+			document.getElementById("scoreView").hidden = true;
+			modal.hidden = false;
+			document.body.style.overflow = "hidden";
+			renderQuestion();
+			document.getElementById("closeModal").focus();
+		}
+
+		function renderQuestion() {
+			const question = activeQuiz.quiz[questionIndex];
+			answered = false;
+			document.getElementById("progressText").textContent = `Question ${questionIndex + 1} of ${activeQuiz.quiz.length}`;
+			document.getElementById("scoreText").textContent = `${score} correct`;
+			document.getElementById("progressFill").style.width = `${(questionIndex / activeQuiz.quiz.length) * 100}%`;
+			document.getElementById("questionText").textContent = question.q;
+			document.getElementById("feedback").textContent = "";
+			document.getElementById("nextQuestion").hidden = true;
+			document.getElementById("answerList").innerHTML = question.a.map((answer, index) => `<button class="answer" type="button" data-answer="${index}">${answer}</button>`).join("");
+		}
+
+		function chooseAnswer(index) {
+			if (answered) return;
+			answered = true;
+			const question = activeQuiz.quiz[questionIndex];
+			const buttons = [...document.querySelectorAll(".answer")];
+			buttons.forEach((button, answerIndex) => {
+				button.disabled = true;
+				if (answerIndex === question.correct) button.classList.add("correct");
+				else if (answerIndex === index) button.classList.add("incorrect");
+			});
+			if (index === question.correct) score++;
+			document.getElementById("scoreText").textContent = `${score} correct`;
+			document.getElementById("feedback").textContent = index === question.correct ? "Exactly right. Nice one!" : `Not quite. The answer is ${question.a[question.correct]}.`;
+			const next = document.getElementById("nextQuestion");
+			next.innerHTML = questionIndex === activeQuiz.quiz.length - 1 ? "See your score →" : "Next question →";
+			next.hidden = false;
+			next.focus();
+		}
+
+		function finishQuiz() {
+			const total = activeQuiz.quiz.length;
+			const percentage = Math.round(score / total * 100);
+			quizHistory.push({ quizId: activeQuiz.id, score, total, completedAt: new Date().toISOString() });
+			if (storage) {
+				try {
+					storage.setItem(historyStorageKey, JSON.stringify(quizHistory));
+					historyStorageError = "";
+				} catch (error) {
+					historyStorageError = "Your score couldn't be saved between visits, but it will remain visible for this visit.";
+				}
+			}
+			renderHistory();
+			document.getElementById("questionView").hidden = true;
+			document.getElementById("scoreView").hidden = false;
+			document.getElementById("finalScore").textContent = `${score}/${total}`;
+			document.getElementById("scoreHeading").textContent = percentage === 100 ? "A perfect little run!" : percentage >= 60 ? "Look at that curious mind." : "Now you know a little more.";
+			document.getElementById("scoreMessage").textContent = `${percentage}% correct. Fancy another quiz?`;
+			document.getElementById("progressFill").style.width = "100%";
+			document.getElementById("finishQuiz").focus();
+		}
+
+		function scrollToTarget(element) {
+			if (element && typeof element.scrollIntoView === "function") {
+				element.scrollIntoView({ behavior: "smooth", block: "start" });
+			}
+		}
+
+		categoryList.addEventListener("click", (event) => {
+			const button = event.target.closest("[data-category]");
+			if (!button) return;
+			state.category = button.dataset.category;
+			state.savedOnly = false;
+			state.visibleCount = initialVisibleCount;
+			render();
+		});
+
+		document.getElementById("difficultyChips").addEventListener("click", (event) => {
+			const button = event.target.closest("[data-difficulty]");
+			if (!button) return;
+			state.difficulty = button.dataset.difficulty;
+			state.visibleCount = initialVisibleCount;
+			document.querySelectorAll(".chip").forEach((chip) => chip.classList.toggle("active", chip === button));
+			renderQuizzes();
+		});
+
+		quizGrid.addEventListener("click", (event) => {
+			const saveButton = event.target.closest("[data-save]");
+			if (saveButton) {
+				const id = saveButton.dataset.save;
+				if (savedIds.has(id)) savedIds.delete(id); else savedIds.add(id);
+				renderQuizzes();
+				return;
+			}
+			const playButton = event.target.closest("[data-quiz]");
+			if (playButton) openQuiz(playButton.dataset.quiz);
+		});
+
+		document.querySelector(".feature").addEventListener("click", (event) => {
+			const button = event.target.closest("[data-quiz]");
+			if (button) openQuiz(button.dataset.quiz);
+		});
+
+		searchInput.addEventListener("input", () => { state.query = searchInput.value.trim(); state.visibleCount = initialVisibleCount; renderQuizzes(); });
+		document.getElementById("sortSelect").addEventListener("change", (event) => { state.sort = event.target.value; state.visibleCount = initialVisibleCount; renderQuizzes(); });
+		document.getElementById("savedLink").addEventListener("click", (event) => {
+			event.preventDefault();
+			document.getElementById("discover").hidden = false;
+			document.getElementById("historyPage").hidden = true;
+			state.savedOnly = true;
+			state.category = "All quizzes";
+			state.visibleCount = initialVisibleCount;
+			showView("discover");
+			render();
+			scrollToTarget(document.getElementById("quizGrid"));
+		});
+		document.getElementById("discoverLink").addEventListener("click", (event) => {
+			event.preventDefault();
+			state.savedOnly = false;
+			state.category = "All quizzes";
+			state.visibleCount = initialVisibleCount;
+			showView("discover");
+			render();
+			scrollToTarget(document.getElementById("feature"));
+		});
+		document.getElementById("historyLink").addEventListener("click", (event) => {
+			event.preventDefault();
+			showView("history");
+			renderHistory();
+			scrollToTarget(document.getElementById("historyPage"));
+		});
+		document.getElementById("historyList").addEventListener("click", (event) => {
+			const replayButton = event.target.closest("[data-replay]");
+			if (replayButton) openQuiz(replayButton.dataset.replay);
+		});
+		document.getElementById("loadMoreButton").addEventListener("click", () => {
+			const results = filteredQuizzes();
+			state.visibleCount = Math.min(state.visibleCount + 24, results.length);
+			renderQuizzes();
+		});
+
+		document.getElementById("surpriseButton").addEventListener("click", () => {
+			const options = filteredQuizzes();
+			const pool = options.length ? options : quizzes;
+			openQuiz(pool[Math.floor(Math.random() * pool.length)].id);
+		});
+		document.getElementById("closeModal").addEventListener("click", closeQuiz);
+		document.getElementById("finishQuiz").addEventListener("click", closeQuiz);
+		document.getElementById("nextQuestion").addEventListener("click", () => {
+			if (questionIndex === activeQuiz.quiz.length - 1) finishQuiz();
+			else { questionIndex++; renderQuestion(); }
+		});
+		document.getElementById("answerList").addEventListener("click", (event) => {
+			const button = event.target.closest("[data-answer]");
+			if (button) chooseAnswer(Number(button.dataset.answer));
+		});
+		modal.addEventListener("click", (event) => { if (event.target === modal) closeQuiz(); });
+		document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !modal.hidden) closeQuiz(); });
+
+		function closeQuiz() {
+			modal.hidden = true;
+			document.body.style.overflow = "";
+		}
+
+		render();
+	</script>
+</body>
+</html>
